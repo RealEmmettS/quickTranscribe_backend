@@ -48,7 +48,7 @@ def transcribe_route():
 		return jsonify({'error': 'An unexpected error occurred'}), 500
 
 def transcribe_file(file_url):
-		config = aai.TranscriptionConfig(speaker_labels=True)
+		config = aai.TranscriptionConfig(speaker_labels=True, speech_model=aai.SpeechModel.best, filter_profanity=False, disfluencies=True)
 
 		print("Transcribing audio...")
 		with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
