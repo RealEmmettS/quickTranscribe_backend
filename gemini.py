@@ -5,6 +5,7 @@ from prompts import summaryPrompt
 
 GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 
+
 def summarize(raw_transcript):
 	genai.configure(api_key=GOOGLE_API_KEY)
 	model = genai.GenerativeModel('gemini-pro')
