@@ -48,7 +48,7 @@ def transcribe_route():
     except Exception as e:
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
     finally:
-        os.rmdir(temp_dir)
+        shutil.rmtree(temp_dir)
 
 def process_file(file_url):
     config = aai.TranscriptionConfig(
