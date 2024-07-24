@@ -65,8 +65,14 @@ def process_file(file_url):
 		print(transcript.auto_highlights.__dict__)
 
 		with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
-				temp_file.write("Transcript:\n" + transcript.text + "\n")
-				temp_file.write("\nSummary:\n" + summarize(transcript.text) + "\n\n")
+				temp_file.write("Transcript:\n\n")
+
+				for utterance in transcript.utterances:
+					temp_file.write(f"Speaker {utterance.speaker}: {utterance.text}\n")
+
+					temp_file.write("\n\n----------------\n\n")
+
+				temp_file.write("\nSummary:\n" + summarize(transcript.text) + "\n")
 
 				temp_file.write("----------------\n\n")
 
@@ -77,19 +83,17 @@ def process_file(file_url):
 				else:
 						temp_file.write("No highlights available.\n")
 
-				temp_file.write("\nEntities Detected:\n")
+				temp_file.write("\nNames & Resources Detected:\n")
 				for entity in transcript.entities:
 						entity_type_string = entity.entity_type.split('.')[-1]
-						start_minutes, start_seconds = divmod(entity.start, 60)
-						end_minutes, end_seconds = divmod(entity.end, 60)
 
 						temp_file.write(
-							f" - {entity.text} ({entity_type_string}) [Start: {start_minutes:02}:{start_seconds:02}, End: {end_minutes:02}:{end_seconds:02}]\n"
+							f" - {entity_type_string.upper()}, {entity.text}\n"
 						)
 
 				temp_file.write("\nTopics:\n")
 				for topic, relevance in transcript.iab_categories.summary.items():
-						temp_file.write(f" - {topic.split('>')[-1]}, Relevance: {relevance * 100}%\n")
+						temp_file.write(f" - {topic.split('>')[-1]}, Relevance: {relevance * 100:.1f}%\n")
 
 				sentiments = {'POSITIVE': 0, 'NEGATIVE': 0, 'NEUTRAL': 0}
 				for sentiment in transcript.sentiment_analysis:
