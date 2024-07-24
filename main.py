@@ -70,7 +70,7 @@ def process_file(file_url):
         temp_file.write("Transcript:\n\n")
 
         for utterance in transcript.utterances:
-            temp_file.write(f"\SPEAKER {utterance.speaker}: {utterance.text}\n")
+            temp_file.write(f"SPEAKER {utterance.speaker}: {utterance.text}\n")
 
         temp_file.write("\n\n----------------\n\n")
 
