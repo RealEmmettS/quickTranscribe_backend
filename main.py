@@ -60,9 +60,6 @@ def process_file(file_url):
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(file_url, config)
 
-    # Debug print to inspect the structure
-    print(transcript.auto_highlights.__dict__)
-
     with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
         
         temp_file.write("\n\n----------------\n\n")
@@ -79,11 +76,12 @@ def process_file(file_url):
         temp_file.write("\n\n----------------\n\n")
 
         temp_file.write("\nHighlights:\n")
-        if hasattr(transcript.auto_highlights, 'result'):
+        if transcript.auto_highlights and hasattr(transcript.auto_highlights, 'result'):
             for highlight in transcript.auto_highlights.result:
                 temp_file.write(f" - {highlight.text}\n")
         else:
             temp_file.write("No highlights available.\n")
+
 
         temp_file.write("\n\n----------------\n\n")
 
