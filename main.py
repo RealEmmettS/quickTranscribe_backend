@@ -31,8 +31,13 @@ def transcribe_route():
         return jsonify({'error': 'no file selected'}), 400
 
     filename = secure_filename(file.filename)
-    temp_dir = tempfile.TemporaryDirectory()
-    file_path = os.path.join(temp_dir.name, filename)
+
+    # Define the upload directory
+    UPLOAD_DIR = '/uploads'
+    # Create a custom temporary directory within the persistent storage
+    temp_dir = tempfile.mkdtemp(dir=UPLOAD_DIR)
+
+    file_path = os.path.join(temp_dir, filename)
     file.save(file_path)
 
     try:
@@ -44,6 +49,7 @@ def transcribe_route():
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
     finally:
         temp_dir.cleanup()
+        os.rmdir(temp_dir)
 
 def process_file(file_url):
     config = aai.TranscriptionConfig(
@@ -59,6 +65,7 @@ def process_file(file_url):
     print("Transcribing audio...")
     transcriber = aai.Transcriber()
     transcript = transcriber.transcribe(file_url, config)
+
 
     with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
         
