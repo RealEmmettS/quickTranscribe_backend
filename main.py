@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, jsonify
 from flask_cors import CORS
 import os
+import shutil
 from werkzeug.utils import secure_filename
 import tempfile
 import assemblyai as aai
