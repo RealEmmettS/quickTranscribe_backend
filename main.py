@@ -48,7 +48,6 @@ def transcribe_route():
     except Exception as e:
         return jsonify({'error': f'An unexpected error occurred: {str(e)}'}), 500
     finally:
-        temp_dir.cleanup()
         os.rmdir(temp_dir)
 
 def process_file(file_url):
