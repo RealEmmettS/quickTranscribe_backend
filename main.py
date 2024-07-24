@@ -64,16 +64,19 @@ def process_file(file_url):
     print(transcript.auto_highlights.__dict__)
 
     with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
+        
+        temp_file.write("\n\n----------------\n\n")
+        
         temp_file.write("Transcript:\n\n")
 
         for utterance in transcript.utterances:
-            temp_file.write(f"Speaker {utterance.speaker}: {utterance.text}\n")
+            temp_file.write(f"\SPEAKER {utterance.speaker}: {utterance.text}\n")
 
         temp_file.write("\n\n----------------\n\n")
 
         temp_file.write("\nSummary:\n" + summarize(transcript.text) + "\n")
 
-        temp_file.write("----------------\n\n")
+        temp_file.write("\n\n----------------\n\n")
 
         temp_file.write("\nHighlights:\n")
         if hasattr(transcript.auto_highlights, 'result'):
@@ -82,22 +85,30 @@ def process_file(file_url):
         else:
             temp_file.write("No highlights available.\n")
 
-        temp_file.write("\nNames & Resources Detected:\n")
+        temp_file.write("\n\n----------------\n\n")
+
+        temp_file.write("Names & Resources Detected:\n")
         for entity in transcript.entities:
             entity_type_string = entity.entity_type.split('.')[-1]
             temp_file.write(f" - {entity_type_string.upper()}, {entity.text}\n")
 
-        temp_file.write("\nTopics:\n")
+        temp_file.write("\n\n----------------\n\n")
+
+        temp_file.write("Topics:\n")
         for topic, relevance in transcript.iab_categories.summary.items():
             temp_file.write(f" - {topic.split('>')[-1]}, Relevance: {relevance * 100:.1f}%\n")
+
+        temp_file.write("\n\n----------------\n\n")
 
         sentiments = {'POSITIVE': 0, 'NEGATIVE': 0, 'NEUTRAL': 0}
         for sentiment in transcript.sentiment_analysis:
             sentiments[sentiment.sentiment] += 1
-        temp_file.write("\nSentiment Summary:\n")
+        temp_file.write("Sentiment Summary:\n")
         temp_file.write(f"Positive sentences: {sentiments['POSITIVE']}, ")
         temp_file.write(f"Negative sentences: {sentiments['NEGATIVE']}, ")
         temp_file.write(f"Neutral sentences: {sentiments['NEUTRAL']}\n")
+        
+        temp_file.write("\n\n----------------\n\n\n")
 
     return temp_file.name
 
