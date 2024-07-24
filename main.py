@@ -66,7 +66,9 @@ def process_file(file_url):
 
 		with tempfile.NamedTemporaryFile(delete=False, suffix='.txt', mode='w+') as temp_file:
 				temp_file.write("Transcript:\n" + transcript.text + "\n")
-				temp_file.write("\nSummary:\n" + summarize(transcript.text) + "\n")
+				temp_file.write("\nSummary:\n" + summarize(transcript.text) + "\n\n")
+
+				temp_file.write("----------------\n\n")
 
 				temp_file.write("\nHighlights:\n")
 				if hasattr(transcript.auto_highlights, 'result'):
@@ -77,13 +79,17 @@ def process_file(file_url):
 
 				temp_file.write("\nEntities Detected:\n")
 				for entity in transcript.entities:
+						entity_type_string = entity.entity_type.split('.')[-1]
+						start_minutes, start_seconds = divmod(entity.start, 60)
+						end_minutes, end_seconds = divmod(entity.end, 60)
+
 						temp_file.write(
-								f"{entity.text} ({entity.entity_type}) [Start: {entity.start}, End: {entity.end}]\n"
+							f" - {entity.text} ({entity_type_string}) [Start: {start_minutes:02}:{start_seconds:02}, End: {end_minutes:02}:{end_seconds:02}]\n"
 						)
 
 				temp_file.write("\nTopics:\n")
 				for topic, relevance in transcript.iab_categories.summary.items():
-						temp_file.write(f"Topic: {topic}, Relevance: {relevance * 100}%\n")
+						temp_file.write(f" - {topic.split('>')[-1]}, Relevance: {relevance * 100}%\n")
 
 				sentiments = {'POSITIVE': 0, 'NEGATIVE': 0, 'NEUTRAL': 0}
 				for sentiment in transcript.sentiment_analysis:
