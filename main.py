@@ -76,7 +76,7 @@ def process_file(file_url):
         temp_file.write("\n\n----------------\n\n")
 
         temp_file.write("\nHighlights:\n")
-        if transcript.auto_highlights and hasattr(transcript.auto_highlights, 'result'):
+        if transcript.auto_highlights and hasattr(transcript.auto_highlights, 'result') and transcript.auto_highlights.result is not None:
             for highlight in transcript.auto_highlights.result:
                 temp_file.write(f" - {highlight.text}\n")
         else:
