@@ -14,7 +14,7 @@ CORS(app,
              ["https://transcribe.emmetts.dev", "https://*.emmetts.dev"]
          }
      })
-aai.settings.api_key = os.environ['ASSEMBLY_API_KEY']
+aai.settings.api_key = os.environ.get('ASSEMBLY_API_KEY')
 
 
 @app.route('/transcribe', methods=['POST'])

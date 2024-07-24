@@ -3,7 +3,7 @@ import google.generativeai as genai
 
 from prompts import summaryPrompt
 
-GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 
 def summarize(raw_transcript):
